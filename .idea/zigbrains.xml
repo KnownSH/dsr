@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BuildScanner">
+    <option name="projects">
+      <list><![CDATA[{
+  "name": "Puffle",
+  "version": "0.0.1",
+  "path": "C:\\Users\\KnownSH\\Documents\\Mods\\Dergtools",
+  "steps": [
+    {
+      "name": "install",
+      "description": "Copy build artifacts to prefix path",
+      "kind": "install_artifact"
+    },
+    {
+      "name": "uninstall",
+      "description": "Remove build artifacts from prefix path",
+      "kind": "uninstall"
+    },
+    {
+      "name": "run",
+      "description": "Run puffle",
+      "kind": "run"
+    }
+  ],
+  "modules": [
+    {
+      "root": "src\\main.zig",
+      "public": false,
+      "imports": []
+    }
+  ],
+  "dependencies": []
+}]]><![CDATA[{
+  "name": "luau",
+  "version": "0.0.0+729",
+  "path": "C:\\Users\\KnownSH\\Documents\\Mods\\Repos\\zig-luau",
+  "steps": [
+    {
+      "name": "test",
+      "description": "Run zig-luau tests",
+      "kind": "run"
+    },
+    {
+      "name": "install-example-luau-bytecode",
+      "description": "Install luau-bytecode example",
+      "kind": "install_artifact"
+    },
+    {
+      "name": "run-example-luau-bytecode",
+      "description": "Run luau-bytecode example",
+      "kind": "run"
+    },
+    {
+      "name": "install-example-repl",
+      "description": "Install repl example",
+      "kind": "install_artifact"
+    },
+    {
+      "name": "run-example-repl",
+      "description": "Run repl example",
+      "kind": "run"
+    },
+    {
+      "name": "install-example-zig-fn",
+      "description": "Install zig-fn example",
+      "kind": "install_artifact"
+    },
+    {
+      "name": "run-example-zig-fn",
+      "description": "Run zig-fn example",
+      "kind": "run"
+    },
+    {
+      "name": "docs",
+      "description": "Build and install the documentation",
+      "kind": "install_dir"
+    }
+  ],
+  "modules": [
+    {
+      "root": "src\\lib.zig",
+      "public": true,
+      "imports": []
+    },
+    {
+      "root": "src\\tests.zig",
+      "public": false,
+      "imports": []
+    },
+    {
+      "root": "examples\\luau-bytecode.zig",
+      "public": false,
+      "imports": []
+    },
+    {
+      "root": "examples\\repl.zig",
+      "public": false,
+      "imports": []
+    },
+    {
+      "root": "examples\\zig-fn.zig",
+      "public": false,
+      "imports": []
+    }
+  ],
+  "dependencies": []
+}]]><![CDATA[{
+  "name": "luau",
+  "version": null,
+  "path": "C:\\Users\\KnownSH\\Documents\\Mods\\Dergtools\\zig-pkg\\N-V-__8AANYizQDxr1_GgYoEIaqeuZtTT9N9LtvAVPWYcj5r",
+  "steps": [
+    {
+      "name": "install",
+      "description": "Copy build artifacts to prefix path",
+      "kind": "uninstall"
+    },
+    {
+      "name": "uninstall",
+      "description": "Remove build artifacts from prefix path",
+      "kind": "uninstall"
+    }
+  ],
+  "modules": [],
+  "dependencies": []
+}]]></list>
+    </option>
+  </component>
+  <component name="ZigToolchain" toolchain="b0beae23-94fb-4777-9edb-208c63872068" />
+</project>

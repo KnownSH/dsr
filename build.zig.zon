@@ -1,0 +1,12 @@
+.{
+    .name = .Puffle,
+    .version = "0.0.1",
+    .minimum_zig_version = "0.16.0",
+    .dependencies = .{
+        .luau = .{
+            .path = "../Repos/zig-luau"
+        },
+    },
+    .paths = .{""},
+    .fingerprint = 0x2af968da88a62484,
+}

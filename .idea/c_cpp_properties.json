@@ -1,0 +1,13 @@
+{
+    "configurations": [
+        {
+            "name": "CLion",
+            "includePath": [
+                "${workspaceFolder}/zig-pkg/luau-0.0.0+729-uDAGpw54CgBjXiEQE2RJDFEFTPeShWwX2RjRd2op7Q97/**"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "c++20"
+        }
+    ],
+    "version": 4
+}
