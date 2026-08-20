@@ -1,1 +1,7 @@
-return "hi im a module"
+
+
+return {
+   value = function()
+      error("ooops")
+   end
+}

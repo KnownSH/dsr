@@ -1,5 +1,5 @@
 const std = @import("std");
-const util = @import("../util/lib.zig");
+const util = @import("utils");
 const navigator = @import("require/navigator.zig");
 
 const Io = std.Io;

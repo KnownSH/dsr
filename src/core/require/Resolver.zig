@@ -1,5 +1,5 @@
 const std = @import("std");
-const util = @import("../../util/lib.zig");
+const util = @import("utils");
 
 const Resolver = @This();
 const PathType = util.path.PathType;
@@ -101,33 +101,33 @@ fn freeAliasMap(allocator: std.mem.Allocator, aliases: *AliasMap) void {
 test Resolver {
     const allocator = std.testing.allocator;
     const io = std.testing.io;
-
-    var r = try Resolver.init(allocator, io);
+    
+    var r = try Resolver.init(allocator);
     defer r.deinit();
     
     {
-        const got = try r.resolve("test/resolve", "./util");
+        const got = try r.resolve(allocator, io, "test/resolve", "./util");
         try std.testing.expectStringEndsWith(got, "util.luau");
         allocator.free(got);
     }
     {
-        const got = try r.resolve("test/resolve/pkg", "../util"); 
+        const got = try r.resolve(allocator, io, "test/resolve/pkg", "../util"); 
         try std.testing.expectStringEndsWith(got, "util.luau");
         allocator.free(got);
     }
     {
-        const got = try r.resolve("test/resolve", "./pkg");
+        const got = try r.resolve(allocator, io, "test/resolve", "./pkg");
         try std.testing.expectStringEndsWith(got, "pkg" ++ std.Io.Dir.path.sep_str ++ "init.luau");
         allocator.free(got);
     }
     {
         try r.aliases.put(allocator, "pkg", "test/resolve/pkg");
         defer _ = r.aliases.remove("pkg");
-        const got = try r.resolve("tests/resolve", "@pkg/sub");
+        const got = try r.resolve(allocator, io, "tests/resolve", "@pkg/sub");
         try std.testing.expectStringEndsWith(got, "sub.luau");
         allocator.free(got);
     }
     {
-        try std.testing.expectError(error.NotRelativeOrAliased, r.resolve("test/resolve", "util"));
+        try std.testing.expectError(error.NotRelativeOrAliased, r.resolve(allocator, io, "test/resolve", "util"));
     }
 }

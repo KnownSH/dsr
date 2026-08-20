@@ -1,14 +1,13 @@
 const std = @import("std");
 const luau = @import("luau");
+const util = @import("utils");
 
-const util = @import("../../util/lib.zig");
 const Resolver = @import("Resolver.zig");
 const Cache = @import("Cache.zig");
 const compile = @import("../compile.zig");
 
 const Requirer = @This();
 
-allocator: std.mem.Allocator,
 io: *std.Io,
 L: *luau.State,
 resolver: Resolver,
@@ -20,7 +19,6 @@ pub fn init(io: *std.Io, L: *luau.State) !*Requirer {
     errdefer allocator.destroy(self);
 
     self.* = .{
-        .allocator = allocator,
         .io = io,
         .L = L,
         .resolver = try .init(allocator),
@@ -44,19 +42,21 @@ pub fn install(self: *Requirer) !void {
 }
 
 fn loadModule(self: *Requirer, canonical: []const u8) !void {
+    var arena: std.heap.ArenaAllocator = .init(luau.getallocator(self.L));
+    defer arena.deinit();
+    const allocator = arena.allocator();
+    
     const GL = self.L.mainthread();
     const ML = try GL.newthread();
     GL.xmove(self.L, 1);
     try ML.Lsandboxthread();
-
-    const src = try std.Io.Dir.cwd().readFileAlloc(self.io.*, canonical, self.allocator, .unlimited);
-    defer self.allocator.free(src);
-
-    const name: [:0]u8 = try self.allocator.dupeSentinel(u8, canonical, 0);
-    defer self.allocator.free(name);
+    
+    const src = try std.Io.Dir.cwd().readFileAlloc(self.io.*, canonical, allocator, .unlimited);
+    const name: [:0]u8 = try allocator.dupeSentinel(u8, canonical, 0);
 
     try compile.loadModule(ML, name, src);
     _ = try ML.pcall(0, 1, 0).check();
+    
     ML.xmove(self.L, 1);
 }
 

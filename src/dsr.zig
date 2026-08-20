@@ -1,11 +1,5 @@
 const std = @import("std");
-const builtin = @import("builtin");
-const luau = @import("luau");
-
 const Runtime = @import("Runtime.zig");
-const compile = @import("core/compile.zig");
-
-const Io = std.Io;
 
 fn cliRunner(init: std.process.Init, args: std.process.Args) !void {
     var arena: std.heap.ArenaAllocator = .init(init.gpa);
@@ -23,11 +17,10 @@ fn cliRunner(init: std.process.Init, args: std.process.Args) !void {
     const cmd = args_slice[1];
 
     if (std.mem.eql(u8, cmd, "run")) {
-        var gpa = init.gpa;
+        const gpa = init.gpa;
         var io = init.io;
         var rt = try Runtime.init(&gpa, &io);
         defer rt.deinit();
-        
         try rt.runFile(args_slice[2]);
     } else {
         printHelp();
@@ -51,4 +44,5 @@ pub fn main(init: std.process.Init) !void {
 
 test {
     _ = @import("core/require/Requirer.zig");
+    _ = @import("utils");
 }

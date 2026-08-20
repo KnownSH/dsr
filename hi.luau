@@ -1,3 +1,3 @@
 const hi = require("./file")
 
-print(hi)
+print(hi.value())

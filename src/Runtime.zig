@@ -1,32 +1,32 @@
 const std = @import("std");
 const luau = @import("luau");
+const luauz = @import("luauz");
+
 const Requirer = @import("core/require/Requirer.zig");
 const compile = @import("core/compile.zig");
 
 const Runtime = @This();
 
-allocator: *std.mem.Allocator,
+allocator: *const std.mem.Allocator,
 io: *std.Io,
 L: *luau.State,
 requirer: *Requirer,
 
-pub fn init(allocator: *std.mem.Allocator, io: *std.Io) !Runtime {
-    const L = try luau.init(allocator);
+pub fn init(allocator: *const std.mem.Allocator, io: *std.Io) !Runtime {
+    var L = try luauz.Luau.init(allocator);
     errdefer L.deinit();
 
-    // enable codegen
-    if (luau.codegen.supported())
-        luau.codegen.create(L);
-    try L.Lopenlibs();
+    L.codegen();
+    try L.openLibs();
 
-    const requirer = try Requirer.init(io, L);
+    const requirer = try Requirer.init(io, L.L);
     errdefer requirer.deinit();
     try requirer.install();
 
     return .{
         .allocator = allocator,
         .io = io,
-        .L = L,
+        .L = L.L,
         .requirer = requirer,
     };
 }
