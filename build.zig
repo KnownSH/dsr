@@ -22,6 +22,10 @@ pub fn build(b: *std.Build) void {
     addDependencies(b, exe.root_module, args);
     b.installArtifact(exe);
 
+    const unit_tests = b.addTest(.{ .root_module = exe.root_module });
+    const run_unit_tests = b.addRunArtifact(unit_tests);
+    b.step("test", "Run unit tests").dependOn(&run_unit_tests.step);
+
     const run_step = b.step("run", "Run puffle");
     const run_cmd = b.addRunArtifact(exe);
     run_step.dependOn(&run_cmd.step);

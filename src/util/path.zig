@@ -1,5 +1,15 @@
 const std = @import("std");
 
+pub const INIT_SUFFIXES: []const [:0]const u8 = &.{
+    "/init.luau",
+    "/init.lua",
+};
+
+pub const SUFFIXES: []const [:0]const u8 = &.{
+    ".luau",
+    ".lua",
+};
+
 pub const PathType = enum {
     relative_to_parent,
     relative_to_current,
@@ -7,13 +17,15 @@ pub const PathType = enum {
     unknown,
 
     pub fn get(path: []const u8) PathType {
+        if (path.len == 0) return .unknown;
         return switch (path[0]) {
             '.' => switch (if (path.len == 1) return .unknown else path[1]) {
                 '/', '\\' => return .relative_to_current,
                 '.' => switch (if (path.len == 2) return .unknown else path[2]) {
                     '/', '\\' => return .relative_to_parent,
-                    else => return .unknown
-                }
+                    else => return .unknown,
+                },
+                else => return .unknown,
             },
             '@' => .aliased,
             else => .unknown,
@@ -35,21 +47,8 @@ pub fn splitPath(path: []const u8) Split {
 }
 
 pub fn fileExists(dir: std.Io.Dir, io: std.Io, path: []const u8) bool {
-    std.Io.Dir.access(dir, io, path, .{}) catch return false;
+    std.Io.Dir.access(dir, io, path, .{ .read = true }) catch return false;
     return true;
-}
-
-pub fn extractAlias(path: []const u8) []const u8 {
-    if (path.len < 1 or path[0] != '@') return "";
-
-    const alias_start = 1;
-    const separator_pos = std.mem.findScalar(u8, path, '/') orelse path.len;
-    const alias_len = if (separator_pos == path.len)
-        path.len - alias_start
-    else
-        separator_pos - alias_start;
-
-    return path[alias_start .. alias_start + alias_len];
 }
 
 /// Returns only the directory part of the path + prefixed slash if there is one.
@@ -81,5 +80,9 @@ pub fn joinPath(allocator: std.mem.Allocator, base: []const u8, rest: []const u8
     defer allocator.free(normalized);
     std.mem.replaceScalar(u8, normalized, '\\', '/');
 
-    return std.fs.path.join(allocator, &.{ base, normalized });
+    return std.Io.Dir.path.resolve(allocator, &.{ base, normalized });
+}
+
+pub fn joinAndCollapse(allocator: std.mem.Allocator, base: []const u8, rest: []const u8) ![]u8 {
+    return std.Io.Dir.path.resolve(allocator, &.{ base, rest });
 }

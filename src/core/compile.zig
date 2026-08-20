@@ -1,16 +1,13 @@
 const std = @import("std");
 const luau = @import("luau");
 
-const VM = luau.VM;
-const LuauState = *VM.lua.State;
-
 const syntax_log = std.log.scoped(.syntax);
 
 const compile_opts = luau.CompileOptions{
     .optimizationLevel = 2,
 };
 
-pub fn loadModule(L: LuauState, name: [:0]const u8, content: []const u8) error{Syntax}!void {
+pub fn loadModule(L: *luau.State, name: [:0]const u8, content: []const u8) error{Syntax}!void {
     // remove shebang (zune does this so i might as well)
     var script = content;
     if (std.mem.startsWith(u8, content, "#!")) {
@@ -26,7 +23,7 @@ pub fn loadModule(L: LuauState, name: [:0]const u8, content: []const u8) error{S
 }
 
 /// Causes process to exit if the file cannot be compiled!
-pub fn loadModuleUnsafe(L: LuauState, name: [:0]const u8, content: []const u8) void {
+pub fn loadModuleUnsafe(L: *luau.State, name: [:0]const u8, content: []const u8) void {
     loadModule(L, name, content) catch |err| switch (err) {
         error.Syntax => {
             syntax_log.err("{s}", .{L.tostring(-1) orelse "UnknownError"});
