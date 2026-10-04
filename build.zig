@@ -45,7 +45,7 @@ pub fn build(b: *std.Build) void {
     });
     b.installArtifact(exe);
 
-    const unit_tests = b.addTest(.{ .root_module = exe.root_module });
+    const unit_tests = b.addTest(.{ .root_module = @field(submodules, "utils") });
     const run_unit_tests = b.addRunArtifact(unit_tests);
     b.step("test", "Run unit tests").dependOn(&run_unit_tests.step);
 

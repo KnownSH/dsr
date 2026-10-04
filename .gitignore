@@ -5,3 +5,6 @@ zig-pkg/
 /.idea
 /.vscode
 /.zed
+
+# this unfinished!
+/WRITING_EXTENSIONS.zig
